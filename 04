@@ -1,0 +1,26 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <pthread.h>
+
+int counter = 0; // متغير عام مشترك بين الخيوط[cite: 2]
+
+void* increment(void* arg) {
+    for (int i = 0; i < 1000; i++) {
+        counter++;
+    }
+    return NULL;
+}
+
+int main() {
+    pthread_t threads[10];
+    for (int i = 0; i < 10; i++) {
+        pthread_create(&threads[i], NULL, increment, NULL);
+    }
+
+    for (int i = 0; i < 10; i++) {
+        pthread_join(threads[i], NULL);
+    }
+
+    printf("Final Counter Value: %d (Expected 10000)\n", counter);
+    return 0;
+}
