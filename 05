@@ -1,0 +1,23 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+
+int main() {
+    int status;
+    pid_t pid = fork();
+
+    if (pid == 0) {
+        printf("Child executing...\n");
+        sleep(1);
+        exit(5); // إنهاء مع حالة محددة
+    } else {
+        // استخدام waitpid للمتابعة الدقيقة
+        pid_t terminated = waitpid(pid, &status, 0);
+        if (WIFEXITED(status)) {
+            printf("Child %d exited with status %d\n", terminated, WEXITSTATUS(status));
+        }
+    }
+    return 0;
+}
